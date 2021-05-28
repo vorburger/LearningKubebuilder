@@ -51,7 +51,7 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	/* TODO foo.Status... */
+	foo.Status.Bar = "hello, " + foo.GetName() + " with spec " + foo.Spec.Foo
 	if err := r.Status().Update(ctx, &foo); err != nil {
 		log.Error(err, "Update failed")
 		return ctrl.Result{}, err

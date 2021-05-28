@@ -30,6 +30,7 @@ type FooSpec struct {
 
 // FooStatus defines the observed state of Foo
 type FooStatus struct {
+	Bar string `json:"bar,omitempty"`
 }
 
 //+kubebuilder:object:root=true
