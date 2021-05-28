@@ -1,0 +1,17 @@
+componentConfig: true
+domain: vorburger.ch
+layout:
+- go.kubebuilder.io/v3
+projectName: learning-kubebuilder
+repo: github.com/vorburger/learning-kubebuilder
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: vorburger.ch
+  group: learning
+  kind: Foo
+  path: github.com/vorburger/learning-kubebuilder/api/v1
+  version: v1
+version: "3"
