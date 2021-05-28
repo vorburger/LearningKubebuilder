@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	learningv1 "github.com/vorburger/learning-kubebuilder/api/v1"
+	model "github.com/vorburger/learning-kubebuilder/api/v1"
 )
 
 // FooReconciler reconciles a Foo object
@@ -39,24 +39,31 @@ type FooReconciler struct {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Foo object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.3/pkg/reconcile
 func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	log := log.FromContext(ctx)
 
-	// your logic here
+	var foo model.Foo
+	if err := r.Get(ctx, req.NamespacedName, &foo); err != nil {
+		log.Error(err, "Get failed")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
 
+	/* TODO foo.Status... */
+	if err := r.Status().Update(ctx, &foo); err != nil {
+		log.Error(err, "Update failed")
+		return ctrl.Result{}, err
+	}
+
+	log.Info("Reconciled")
 	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *FooReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&learningv1.Foo{}).
+		For(&model.Foo{}).
 		Complete(r)
 }
